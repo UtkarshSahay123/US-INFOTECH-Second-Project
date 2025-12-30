@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CardioSentinel</title>
+    <link rel="stylesheet" href="styles.css" />
+      <link rel="manifest" href="manifest.json" />
+      <meta name="apple-mobile-web-app-capable" content="yes">
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script defer src="https://docs.opencv.org/4.x/opencv.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/12.7.0/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/12.7.0/firebase-auth-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore-compat.js"></script>
+    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9__WWgUchGuJpfkNvfFkbhAtWPZWINrw"></script>
+    <script>
+      window.firebaseConfig = {
+        apiKey: "AIzaSyACgwkxmbQIZ4HGRYWQYCC7dPPQXNJ4YH0",
+        authDomain: "cardiosentinel.firebaseapp.com",
+        projectId: "cardiosentinel",
+        storageBucket: "cardiosentinel.firebasestorage.app",
+        messagingSenderId: "644760362052",
+        appId: "1:644760362052:web:f7063d2691d10cdaff7011",
+      };
+    </script>
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <div id="authShell" class="auth-shell">
+      <div class="auth-card">
+        <p class="eyebrow">Secure access</p>
+        <h1>Sign in to CardioSentinel</h1>
+        <p id="authMessage">Use your clinical email to continue.</p>
+        <form id="loginForm" class="auth-form auth-form-active">
+          <label>
+            Email
+            <input type="email" name="loginEmail" required />
+          </label>
+          <label>
+            Password
+            <input type="password" name="loginPassword" minlength="6" required />
+          </label>
+          <button type="submit">Log In</button>
+          <div class="auth-links">
+            <button type="button" data-auth-view="signup" class="link-btn">Create account</button>
+            <button type="button" data-auth-view="forgot" class="link-btn">Forgot password?</button>
+          </div>
+        </form>
+        <form id="signupForm" class="auth-form">
+          <label>
+            Email
+            <input type="email" name="signupEmail" required />
+          </label>
+          <label>
+            Password
+            <input type="password" name="signupPassword" minlength="6" required />
+          </label>
+          <button type="submit">Create Account</button>
+          <div class="auth-links">
+            <button type="button" data-auth-view="login" class="link-btn">Back to login</button>
+          </div>
+        </form>
+        <form id="forgotForm" class="auth-form">
+          <label>
+            Email
+            <input type="email" name="forgotEmail" required />
+          </label>
+          <button type="submit">Send Reset Link</button>
+          <div class="auth-links">
+            <button type="button" data-auth-view="login" class="link-btn">Return to login</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="page-shell hidden" id="appShell">
+      <button id="contactLauncher" class="contact-launcher hidden" aria-expanded="false" aria-controls="contactDrawer">
+        <span class="contact-launcher-icon" aria-hidden="true">
+          <span class="contact-head"></span>
+          <span class="contact-shoulders"></span>
+        </span>
+        <span class="sr-only">Open emergency contacts</span>
+      </button>
+      <div id="contactDrawer" class="contact-drawer hidden" role="dialog" aria-labelledby="contactDrawerTitle">
+        <div class="contact-drawer-head">
+          <div>
+            <p class="eyebrow">Emergency directory</p>
+            <h2 id="contactDrawerTitle">Your contacts</h2>
+          </div>
+          <button type="button" class="close-drawer" aria-label="Close contact drawer">&times;</button>
+        </div>
+        <p class="contact-drawer-copy">
+          Store trusted numbers and emails. These entries auto-populate emergency dispatches for the signed-in user.
+        </p>
+        <ul id="contactList" class="contact-list" data-empty="No contacts yet"></ul>
+        <p id="contactStatus" class="contact-status" aria-live="polite"></p>
+        <form id="contactForm" class="contact-form">
+          <label>
+            Name / Label
+            <input type="text" name="contactName" placeholder="Dr. Patel" />
+          </label>
+          <label>
+            Phone (E.164)
+            <input type="tel" name="contactPhone" placeholder="+11234567890" />
+          </label>
+          <label>
+            Email
+            <input type="email" name="contactEmail" placeholder="doctor@example.com" />
+          </label>
+          <button type="submit">Add contact</button>
+        </form>
+      </div>
+      <header class="hero">
+        <div>
+          <p class="eyebrow">AI-powered prevention workflow</p>
+          <h1>CardioSentinel</h1>
+          <p class="lede">
+            Input vitals, review AI analysis, and rely on automated emergency protocols driven by the workflow brief.
+          </p>
+        </div>
+        <div class="hero-metrics">
+          <div>
+            <span>Live Risk</span>
+            <strong id="riskBadge">--</strong>
+          </div>
+          <div>
+            <span>Emergency Mode</span>
+            <strong id="emergencyStatus">Standby</strong>
+          </div>
+        </div>
+      </header>
+
+      <main class="grid">
+        <section class="card" id="formCard">
+          <div class="section-head">
+            <h2>Patient Intake</h2>
+            <p>Collect all workflow parameters before prediction.</p>
+          </div>
+          <form id="predictionForm">
+            <div class="field-grid">
+              <label>
+                Name
+                <input name="name" required />
+              </label>
+              <label>
+                Age
+                <input name="age" type="number" min="1" max="120" required />
+              </label>
+              <label>
+                Sex
+                <select name="sex" required>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </label>
+              <label>
+                Chest Pain Type
+                <select name="chest_pain_type" required>
+                  <option value="typical_angina">Typical angina</option>
+                  <option value="atypical_angina">Atypical angina</option>
+                  <option value="non_anginal">Non-anginal pain</option>
+                  <option value="asymptomatic">Asymptomatic</option>
+                </select>
+              </label>
+              <label>
+                Systolic BP (mm Hg)
+                <input name="bp_systolic" type="number" step="0.1" required />
+              </label>
+              <label>
+                Diastolic BP (mm Hg)
+                <input name="bp_diastolic" type="number" step="0.1" required />
+              </label>
+              <label>
+                Cholesterol (mg/dL)
+                <input name="cholesterol" type="number" step="0.1" required />
+              </label>
+              <label>
+                Sugar Level (mg/dL)
+                <input name="sugar_level" type="number" step="0.1" required />
+              </label>
+              <label>
+                Calories Burned / week
+                <input name="calories_burned" type="number" step="1" required />
+              </label>
+              <label>
+                Max Heart Rate
+                <input name="max_heart_rate" type="number" step="1" required />
+              </label>
+              <label>
+                Resting ECG
+                <select name="resting_ecg">
+                  <option value="normal">Normal</option>
+                  <option value="st_t_abnormality">ST-T Abnormality</option>
+                  <option value="left_ventricular_hypertrophy">LV Hypertrophy</option>
+                </select>
+              </label>
+              <label>
+                Exercise Angina
+                <select name="exercise_angina">
+                  <option value="false">No</option>
+                  <option value="true">Yes</option>
+                </select>
+              </label>
+              <label>
+                ST Depression
+                <input name="st_depression" type="number" min="0" step="0.1" required />
+              </label>
+              <label>
+                Slope of ST
+                <select name="slope">
+                  <option value="upsloping">Upsloping</option>
+                  <option value="flat">Flat</option>
+                  <option value="downsloping">Downsloping</option>
+                </select>
+              </label>
+              <label>
+                Major Vessels (0-3)
+                <input name="num_major_vessels" type="number" min="0" max="3" required />
+              </label>
+              <label>
+                Thalassemia
+                <select name="thalassemia">
+                  <option value="normal">Normal</option>
+                  <option value="fixed_defect">Fixed defect</option>
+                  <option value="reversible_defect">Reversible defect</option>
+                </select>
+              </label>
+              <label>
+                Fasting Hours
+                <input name="fasting_hours" type="number" min="0" max="72" value="8" />
+              </label>
+              <label>
+                Diabetic
+                <select name="diabetic">
+                  <option value="false">No</option>
+                  <option value="true">Yes</option>
+                </select>
+              </label>
+              <label>
+                Smoker
+                <select name="smoker">
+                  <option value="false">No</option>
+                  <option value="true">Yes</option>
+                </select>
+              </label>
+            </div>
+            <label>
+              Notes / Symptoms
+              <textarea name="notes" id="notes" rows="3" placeholder="Describe chest pain, fatigue, meds..."></textarea>
+            </label>
+            <div class="actions">
+              <button type="submit">Predict Risk</button>
+              <button type="button" id="triggerEmergency" class="secondary">Trigger Emergency</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="card" id="reportCard">
+          <div class="section-head">
+            <h2>AI Analysis</h2>
+            <p>Graph, numeric ranges, and workflow-driven insights.</p>
+          </div>
+          <div id="reportPlaceholder">
+            <p>Awaiting prediction. Submit the intake form to see the report.</p>
+          </div>
+          <div id="reportContent" class="hidden">
+            <div class="summary">
+              <p id="advisory"></p>
+              <div class="pill" id="probabilityPill"></div>
+            </div>
+            <canvas id="vitalsChart" width="400" height="220"></canvas>
+            <div class="columns">
+              <div>
+                <h3>Key Insights</h3>
+                <ul id="insights"></ul>
+              </div>
+              <div>
+                <h3>Recommended Actions</h3>
+                <ul id="actions"></ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" id="safetyCard">
+          <div class="section-head">
+            <h2>Safety Automation</h2>
+            <p>Monitors inactivity, enables voice typing, and escalates per workflow.</p>
+          </div>
+          <div class="safety-grid">
+            <div>
+              <h4>Inactivity</h4>
+              <p id="inactivityStatus">Tracking input...</p>
+            </div>
+            <div>
+              <h4>Voice typing</h4>
+              <p id="voiceStatus">Inactive</p>
+            </div>
+            <div>
+              <h4>Vision / OpenCV</h4>
+              <p id="visionStatus">Idle until 40 sec inactivity</p>
+            </div>
+          </div>
+          <div class="video-shell">
+            <video id="cameraFeed" autoplay muted playsinline></video>
+          </div>
+          <div class="map-shell" aria-live="polite">
+            <div id="liveMap" aria-label="Live location map"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

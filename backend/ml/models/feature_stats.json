@@ -1,0 +1,58 @@
+{
+  "feature_stats": {
+    "bp_systolic": {
+      "mean": 131.68976897689768,
+      "p10": 110.0,
+      "p90": 152.0,
+      "min": 94.0,
+      "max": 200.0,
+      "healthy_low": 90.0,
+      "healthy_high": 120.0
+    },
+    "cholesterol": {
+      "mean": 246.69306930693068,
+      "p10": 188.0,
+      "p90": 309.0,
+      "min": 126.0,
+      "max": 564.0,
+      "healthy_low": 125.0,
+      "healthy_high": 200.0
+    },
+    "max_heart_rate": {
+      "mean": 149.6072607260726,
+      "p10": 115.0,
+      "p90": 177.0,
+      "min": 71.0,
+      "max": 202.0,
+      "healthy_low": 90.0,
+      "healthy_high": 170.0
+    },
+    "st_depression": {
+      "mean": 1.0396039603960396,
+      "p10": 0.0,
+      "p90": 2.8,
+      "min": 0.0,
+      "max": 6.2,
+      "healthy_low": 0.0,
+      "healthy_high": 2.0
+    },
+    "sugar_level": {
+      "mean": 99.0,
+      "p10": 70.0,
+      "p90": 125.0,
+      "min": 65.0,
+      "max": 180.0,
+      "healthy_low": 70.0,
+      "healthy_high": 99.0
+    },
+    "calories_burned": {
+      "mean": 2000.0,
+      "p10": 1200.0,
+      "p90": 3500.0,
+      "min": 800.0,
+      "max": 4000.0,
+      "healthy_low": 1500.0,
+      "healthy_high": 3000.0
+    }
+  }
+}

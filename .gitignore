@@ -1,0 +1,13 @@
+# Secrets
+.env
+
+# Dependencies & Build Folders
+node_modules/
+android/
+ios/
+
+# Python folders
+__pycache__/
+.venv/
+venv/
+*.py[cod]
