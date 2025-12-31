@@ -587,7 +587,8 @@ async function submitPrediction(event) {
 
   try {
     // Is line ko replace karein (Line 284 approx)
-     const res = await fetch("https://us-infotech-second-project.onrender.com/api/predict", {
+     // Prediction ke liye sahi endpoint 'api/predict' hona chahiye:
+      const res = await fetch("https://us-infotech-second-project.onrender.com/api/predict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
