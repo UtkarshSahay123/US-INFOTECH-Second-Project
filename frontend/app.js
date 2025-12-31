@@ -586,7 +586,8 @@ async function submitPrediction(event) {
   };
 
   try {
-    const res = await fetch("https://us-infotech-second-project.onrender.com/api/emergency/notify", {
+    // Is line ko replace karein (Line 284 approx)
+     const res = await fetch("https://us-infotech-second-project.onrender.com/api/predict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
