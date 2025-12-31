@@ -539,7 +539,7 @@ async function triggerEmergency(reason) {
   };
 
   try {
-    const res = await fetch("/api/emergency/notify", {
+    const res = await fetch("https://us-infotech-second-project.onrender.com/api/emergency/notify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -586,7 +586,7 @@ async function submitPrediction(event) {
   };
 
   try {
-    const res = await fetch("/api/predict", {
+    const res = await fetch("https://us-infotech-second-project.onrender.com/api/emergency/notify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
