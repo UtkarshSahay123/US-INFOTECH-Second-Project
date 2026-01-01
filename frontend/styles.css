@@ -29,8 +29,8 @@ body {
   position: fixed;
   top: 1.5rem;
   left: 1.5rem;
-  width: 64px;
-  height: 64px;
+  width: 40px;
+  height: 40px;
   border-radius: 22px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(4, 28, 50, 0.4));
@@ -137,19 +137,37 @@ body {
 }
 
 .close-drawer {
+  /* Layout & Size */
+  width: 40px;
+  height: 40px;
+  display: flex;               /* Added: Essential for alignment */
+  align-items: center;         /* Added: Vertical centering */
+  justify-content: center;      /* Added: Horizontal centering */
+
+  /* Styling */
   border: none;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);  /* Added: Modern glassmorphism effect */
   color: var(--text);
-  width: 36px;
-  height: 36px;
   border-radius: 50%;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+  line-height: 1;              /* Added: Removes extra spacing from fonts */
   cursor: pointer;
-  transition: background 0.2s ease;
+
+  /* Animation */
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Hover State */
 .close-drawer:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg);     /* Added: Subtle playful animation */
+}
+
+/* Active (Click) State */
+.close-drawer:active {
+  transform: scale(0.9);        /* Added: Tactile feedback when pressed */
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .contact-list {
@@ -408,6 +426,11 @@ select {
   background: rgba(255, 255, 255, 0.08);
   color: var(--text);
   font-family: inherit;
+}
+select option {
+  background-color: #162a3d;
+  color: #ffffff;
+  padding: 12px;
 }
 
 textarea {
