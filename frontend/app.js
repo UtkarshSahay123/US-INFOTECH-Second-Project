@@ -697,8 +697,8 @@ function enableVoiceTyping() {
     return;
   }
   voiceTypingEnabled = true;
-  voiceStatus.textContent = "Voice typing enabled";
-  broadcastVoiceMessage("Voice typing is enabled");
+  voiceStatus.textContent = "Running emergency protocol due to inactivity";
+  broadcastVoiceMessage("Running emergency protocol due to inactivity");
   recognition = new SpeechRecognition();
   recognition.continuous = true;
   recognition.interimResults = true;
