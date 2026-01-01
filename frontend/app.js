@@ -488,8 +488,8 @@ initializeFirebaseAuth().catch((error) => {
 });
 
 const INACTIVITY_FOR_VISION = 40 * 1000;
-const INACTIVITY_FOR_VOICE = 5 * 60 * 1000;
-const POST_VOICE_TO_EMERGENCY = 2 * 60 * 1000;
+const INACTIVITY_FOR_VOICE = 2 * 60 * 1000;
+const POST_VOICE_TO_EMERGENCY = 1 * 60 * 1000;
 
 const FACE_CASCADE_URL =
   "https://raw.githubusercontent.com/opencv/opencv/master/data/haarcascades/haarcascade_frontalface_default.xml";
